@@ -119,9 +119,8 @@ void RaytracingApplication::InitializeMaterial()
     m_material->SetUniformValue("LightIntensity", 4.0f);
     m_material->SetUniformValue("LightSize", glm::vec2(3.0f));
 
-    // Enable blending and set the blending parameters to alpha blending
-    m_material->SetBlendEquation(Material::BlendEquation::Add);
-    m_material->SetBlendParams(Material::BlendParam::SourceAlpha, Material::BlendParam::OneMinusSourceAlpha);
+    // (todo) 11.3: Enable blending and set the blending parameters to alpha blending
+    m_material->SetBlendEquation(Material::BlendEquation::None);
 }
 
 void RaytracingApplication::InitializeFramebuffer()
