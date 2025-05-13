@@ -1,0 +1,35 @@
+Tips for project from Mark
+Go through exercises (4,5,6,7), could consider doing earlier exercises if more basic understanding is needed to try and do the exercises.
+
+Try and manipulate values and such for different steps of exercise 9 to better understand what happens in each step
+
+
+Translating hatching shader:
+start out with the simple version of having 6 seperate uniform textures and thus also use the if, if else branching part for intensity for the shader.
+Consider starting out with just doing 3 textures to begin with and then more can be added later.
+
+Consider writing a comment for each line doing something in the hatchingsolution.shader to understand what is going on.
+
+
+
+Questions to prepare for talk with Chris:
+Does everything for hatchingsolution.shader need to be translated? (Second forward pass and the shadowcaster)
+When I have translated the hatchingshader, where am I doing my own modified material for the cannon?
+
+Structure:
+Translate hatchingsolution.shader into one hatching.vert and one hatching.frag file
+Create the new material that will be using the hatching shader instead to make the canon have cross-hatching
+Try and create a seperate version that makes it look different with cross-hatching that can be swapped through GUI
+
+
+
+Talk with Chris
+Good idea to especially look at exercise 7,8,9. Doing 4,5,6 can be good for getting basic understanding but all that is abstracted for the later exercises
+Do these exercises and get understanding of the different parts of the process of initializing materials, framebuffer, render, postfx and from this figure out two places to to try and do the cross-hatching
+
+Translate the crosshatching to 1 .frag and 1 .vert file, that is the way to do it.
+I can ignore the forwardAdd and the shadowcasting from the unity file as these are not relevant for the opengl project in exercise09
+It is everything inside the GLSL tags that need to be translated. 
+
+do cross-hatching in forward shading and deferred shading as this is the 2 most common processes for graphics and doing cross-hatching in both would make the project better. 
+Only translating the cross-hatching and placing it in one process in one place could be fine for passing but it would be a good idea to apply it in two places for a better project. Basically being more safe for an acceptable project. 

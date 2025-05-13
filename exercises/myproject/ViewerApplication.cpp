@@ -75,8 +75,8 @@ void ViewerApplication::Cleanup()
 void ViewerApplication::InitializeModel()
 {
     // Load and build shader
-    Shader vertexShader = ShaderLoader::Load(Shader::VertexShader, "../../../../../exercises/exercise05/shaders/blinn-phong.vert");
-    Shader fragmentShader = ShaderLoader::Load(Shader::FragmentShader, "../../../../../exercises/exercise05/shaders/blinn-phong.frag");
+    Shader vertexShader = ShaderLoader::Load(Shader::VertexShader, "../../../../../exercises/myproject/shaders/hatching.vert");
+    Shader fragmentShader = ShaderLoader::Load(Shader::FragmentShader, "../../../../../exercises/myproject/shaders/hatching.frag");
     std::shared_ptr<ShaderProgram> shaderProgram = std::make_shared<ShaderProgram>();
     shaderProgram->Build(vertexShader, fragmentShader);
 
@@ -86,10 +86,12 @@ void ViewerApplication::InitializeModel()
     filteredUniforms.insert("ViewProjMatrix");
     filteredUniforms.insert("AmbientColor");
     filteredUniforms.insert("LightColor");
+    filteredUniforms.insert("LightPosition");
+    filteredUniforms.insert("CameraPosition");
 
     // Create reference material
     std::shared_ptr<Material> material = std::make_shared<Material>(shaderProgram, filteredUniforms);
-    material->SetUniformValue("Color", glm::vec4(1.0f));
+    material->SetUniformValue("Albedo", glm::vec4(1.0f));
     material->SetUniformValue("AmbientReflection", 1.0f);
     material->SetUniformValue("DiffuseReflection", 1.0f);
     material->SetUniformValue("SpecularReflection", 1.0f);
@@ -122,14 +124,25 @@ void ViewerApplication::InitializeModel()
     loader.SetMaterialAttribute(VertexAttribute::Semantic::TexCoord0, "VertexTexCoord");
 
     // Load model
-    m_model = loader.Load("../../../../../exercises/exercise05/models/mill/Mill.obj");
+    m_model = loader.Load("../../../../../exercises/myproject/models/mill/Mill.obj");
 
     // Load and set textures
     Texture2DLoader textureLoader(TextureObject::FormatRGBA, TextureObject::InternalFormatRGBA8);
     textureLoader.SetFlipVertical(true);
-    m_model.GetMaterial(0).SetUniformValue("ColorTexture", textureLoader.LoadShared("../../../../../exercises/exercise05/models/mill/Ground_shadow.jpg"));
-    m_model.GetMaterial(1).SetUniformValue("ColorTexture", textureLoader.LoadShared("../../../../../exercises/exercise05/models/mill/Ground_color.jpg"));
-    m_model.GetMaterial(2).SetUniformValue("ColorTexture", textureLoader.LoadShared("../../../../../exercises/exercise05/models/mill/MillCat_color.jpg"));
+
+    // Albedo texture
+    //m_model.GetMaterial(1).SetUniformValue("AlbedoTexture", textureLoader.LoadShared("textures/albedo.jpg"));
+
+    // Hatching textures
+    for (int i = 0; i < 6; ++i)
+    {
+        std::string path = "../../../../../exercises/myproject/hatching/hatch_" + std::to_string(i) + ".jpg";
+        std::shared_ptr<Texture2DObject> hatchTexture = textureLoader.LoadShared(path.c_str());
+
+        std::string uniformName = "HatchTextures[" + std::to_string(i) + "]";
+        m_model.GetMaterial(1).SetUniformValue(uniformName.c_str(), hatchTexture);
+        m_model.GetMaterial(2).SetUniformValue(uniformName.c_str(), hatchTexture);
+    }
 }
 
 void ViewerApplication::InitializeCamera()
@@ -216,7 +229,7 @@ void ViewerApplication::UpdateCamera()
     }
 
     // Update camera rotation
-   {
+    {
         glm::vec2 mousePosition = window.GetMousePosition(true);
         glm::vec2 deltaMousePosition = mousePosition - m_mousePosition;
         m_mousePosition = mousePosition;
@@ -225,9 +238,9 @@ void ViewerApplication::UpdateCamera()
 
         inputRotation *= m_cameraRotationSpeed;
 
-        viewForward = glm::rotate(inputRotation.x, glm::vec3(0,1,0)) * glm::rotate(inputRotation.y, glm::vec3(viewRight)) * glm::vec4(viewForward, 0);
+        viewForward = glm::rotate(inputRotation.x, glm::vec3(0, 1, 0)) * glm::rotate(inputRotation.y, glm::vec3(viewRight)) * glm::vec4(viewForward, 0);
     }
 
-   // Update view matrix
-   m_camera.SetViewMatrix(m_cameraPosition, m_cameraPosition + viewForward);
+    // Update view matrix
+    m_camera.SetViewMatrix(m_cameraPosition, m_cameraPosition + viewForward);
 }

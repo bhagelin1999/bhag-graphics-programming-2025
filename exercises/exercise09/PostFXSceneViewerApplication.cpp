@@ -125,14 +125,14 @@ void PostFXSceneViewerApplication::InitializeMaterials()
     {
         // Load and build shader
         std::vector<const char*> vertexShaderPaths;
-        vertexShaderPaths.push_back("shaders/version330.glsl");
-        vertexShaderPaths.push_back("shaders/default.vert");
+        vertexShaderPaths.push_back("../../../../../exercises/exercise09/shaders/version330.glsl");
+        vertexShaderPaths.push_back("../../../../../exercises/exercise09/shaders/default.vert");
         Shader vertexShader = ShaderLoader(Shader::VertexShader).Load(vertexShaderPaths);
 
         std::vector<const char*> fragmentShaderPaths;
-        fragmentShaderPaths.push_back("shaders/version330.glsl");
-        fragmentShaderPaths.push_back("shaders/utils.glsl");
-        fragmentShaderPaths.push_back("shaders/default.frag");
+        fragmentShaderPaths.push_back("../../../../../exercises/exercise09/shaders/version330.glsl");
+        fragmentShaderPaths.push_back("../../../../../exercises/exercise09/shaders/utils.glsl");
+        fragmentShaderPaths.push_back("../../../../../exercises/exercise09/shaders/default.frag");
         Shader fragmentShader = ShaderLoader(Shader::FragmentShader).Load(fragmentShaderPaths);
 
         std::shared_ptr<ShaderProgram> shaderProgramPtr = std::make_shared<ShaderProgram>();
@@ -165,16 +165,16 @@ void PostFXSceneViewerApplication::InitializeMaterials()
     // Deferred material
     {
         std::vector<const char*> vertexShaderPaths;
-        vertexShaderPaths.push_back("shaders/version330.glsl");
-        vertexShaderPaths.push_back("shaders/renderer/deferred.vert");
+        vertexShaderPaths.push_back("../../../../../exercises/exercise09/shaders/version330.glsl");
+        vertexShaderPaths.push_back("../../../../../exercises/exercise09/shaders/renderer/deferred.vert");
         Shader vertexShader = ShaderLoader(Shader::VertexShader).Load(vertexShaderPaths);
 
         std::vector<const char*> fragmentShaderPaths;
-        fragmentShaderPaths.push_back("shaders/version330.glsl");
-        fragmentShaderPaths.push_back("shaders/utils.glsl");
-        fragmentShaderPaths.push_back("shaders/lambert-ggx.glsl");
-        fragmentShaderPaths.push_back("shaders/lighting.glsl");
-        fragmentShaderPaths.push_back("shaders/renderer/deferred.frag");
+        fragmentShaderPaths.push_back("../../../../../exercises/exercise09/shaders/version330.glsl");
+        fragmentShaderPaths.push_back("../../../../../exercises/exercise09/shaders/utils.glsl");
+        fragmentShaderPaths.push_back("../../../../../exercises/exercise09/shaders/lambert-ggx.glsl");
+        fragmentShaderPaths.push_back("../../../../../exercises/exercise09/shaders/lighting.glsl");
+        fragmentShaderPaths.push_back("../../../../../exercises/exercise09/shaders/renderer/deferred.frag");
         Shader fragmentShader = ShaderLoader(Shader::FragmentShader).Load(fragmentShaderPaths);
 
         std::shared_ptr<ShaderProgram> shaderProgramPtr = std::make_shared<ShaderProgram>();
@@ -217,7 +217,7 @@ void PostFXSceneViewerApplication::InitializeMaterials()
 
 void PostFXSceneViewerApplication::InitializeModels()
 {
-    m_skyboxTexture = TextureCubemapLoader::LoadTextureShared("models/skybox/yoga_studio.hdr", TextureObject::FormatRGB, TextureObject::InternalFormatRGB16F);
+    m_skyboxTexture = TextureCubemapLoader::LoadTextureShared("../../../../../exercises/exercise09/models/skybox/yoga_studio.hdr", TextureObject::FormatRGB, TextureObject::InternalFormatRGB16F);
 
     m_skyboxTexture->Bind();
     float maxLod;
@@ -251,7 +251,7 @@ void PostFXSceneViewerApplication::InitializeModels()
     loader.SetMaterialProperty(ModelLoader::MaterialProperty::SpecularTexture, "SpecularTexture");
 
     // Load models
-    std::shared_ptr<Model> cannonModel = loader.LoadShared("models/cannon/cannon.obj");
+    std::shared_ptr<Model> cannonModel = loader.LoadShared("../../../../../exercises/exercise09/models/cannon/cannon.obj");
     m_scene.AddSceneNode(std::make_shared<SceneModel>("cannon", cannonModel));
 }
 
@@ -325,19 +325,19 @@ void PostFXSceneViewerApplication::InitializeRenderer()
     m_renderer.AddRenderPass(std::make_unique<SkyboxRenderPass>(m_skyboxTexture));
 
     // Create a copy pass from m_sceneTexture to the first temporary texture
-    std::shared_ptr<Material> copyMaterial = CreatePostFXMaterial("shaders/postfx/copy.frag", m_sceneTexture);
+    std::shared_ptr<Material> copyMaterial = CreatePostFXMaterial("../../../../../exercises/exercise09/shaders/postfx/copy.frag", m_sceneTexture);
     m_renderer.AddRenderPass(std::make_unique<PostFXRenderPass>(copyMaterial, m_tempFramebuffers[0]));
 
     // Replace the copy pass with a new bloom pass
-    m_bloomMaterial = CreatePostFXMaterial("shaders/postfx/bloom.frag", m_sceneTexture);
+    m_bloomMaterial = CreatePostFXMaterial("../../../../../exercises/exercise09/shaders/postfx/bloom.frag", m_sceneTexture);
     m_bloomMaterial->SetUniformValue("Range", glm::vec2(2.0f, 3.0f));
     m_bloomMaterial->SetUniformValue("Intensity", 1.0f);
     m_renderer.AddRenderPass(std::make_unique<PostFXRenderPass>(m_bloomMaterial, m_tempFramebuffers[0]));
 
     // Add blur passes
-    std::shared_ptr<Material> blurHorizontalMaterial = CreatePostFXMaterial("shaders/postfx/blur.frag", m_tempTextures[0]);
+    std::shared_ptr<Material> blurHorizontalMaterial = CreatePostFXMaterial("../../../../../exercises/exercise09/shaders/postfx/blur.frag", m_tempTextures[0]);
     blurHorizontalMaterial->SetUniformValue("Scale", glm::vec2(1.0f / width, 0.0f));
-    std::shared_ptr<Material> blurVerticalMaterial = CreatePostFXMaterial("shaders/postfx/blur.frag", m_tempTextures[1]);
+    std::shared_ptr<Material> blurVerticalMaterial = CreatePostFXMaterial("../../../../../exercises/exercise09/shaders/postfx/blur.frag", m_tempTextures[1]);
     blurVerticalMaterial->SetUniformValue("Scale", glm::vec2(0.0f, 1.0f / height));
     for (int i = 0; i < m_blurIterations; ++i)
     {
@@ -346,7 +346,7 @@ void PostFXSceneViewerApplication::InitializeRenderer()
     }
 
     // Final pass
-    m_composeMaterial = CreatePostFXMaterial("shaders/postfx/compose.frag", m_sceneTexture);
+    m_composeMaterial = CreatePostFXMaterial("../../../../../exercises/exercise09/shaders/postfx/compose.frag", m_sceneTexture);
 
     // Set exposure uniform default value
     m_composeMaterial->SetUniformValue("Exposure", m_exposure);
@@ -367,13 +367,13 @@ std::shared_ptr<Material> PostFXSceneViewerApplication::CreatePostFXMaterial(con
 {
     // We could keep this vertex shader and reuse it, but it looks simpler this way
     std::vector<const char*> vertexShaderPaths;
-    vertexShaderPaths.push_back("shaders/version330.glsl");
-    vertexShaderPaths.push_back("shaders/renderer/fullscreen.vert");
+    vertexShaderPaths.push_back("../../../../../exercises/exercise09/shaders/version330.glsl");
+    vertexShaderPaths.push_back("../../../../../exercises/exercise09/shaders/renderer/fullscreen.vert");
     Shader vertexShader = ShaderLoader(Shader::VertexShader).Load(vertexShaderPaths);
 
     std::vector<const char*> fragmentShaderPaths;
-    fragmentShaderPaths.push_back("shaders/version330.glsl");
-    fragmentShaderPaths.push_back("shaders/utils.glsl");
+    fragmentShaderPaths.push_back("../../../../../exercises/exercise09/shaders/version330.glsl");
+    fragmentShaderPaths.push_back("../../../../../exercises/exercise09/shaders/utils.glsl");
     fragmentShaderPaths.push_back(fragmentShaderPath);
     Shader fragmentShader = ShaderLoader(Shader::FragmentShader).Load(fragmentShaderPaths);
 
